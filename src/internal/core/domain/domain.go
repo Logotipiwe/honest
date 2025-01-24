@@ -3,7 +3,7 @@ package domain
 type Deck struct {
 	ID          string
 	Name        string
-	Description *string
+	Description string
 	Labels      []string
 	Image       string
 	IsHidden    bool

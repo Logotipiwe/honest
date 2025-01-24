@@ -3,8 +3,8 @@ package flyway_test
 import (
 	"crypto/sha256"
 	"database/sql"
-	"dc_honest/src/internal/infrastructure"
-	. "dc_honest/src/internal/infrastructure/flyway"
+	"dc_honest/src/internal/core"
+	. "dc_honest/src/internal/infrastructure/ms/flyway"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -16,7 +16,7 @@ import (
 
 func setupRealDB(t *testing.T) *sql.DB {
 	godotenv.Load("../.env")
-	config := infrastructure.NewConfig()
+	config := core.NewConfig()
 	db, err := sql.Open("mysql", config.GetMysqlConnectionStr())
 	if err != nil {
 		t.Fatalf("Failed to connect to real database: %v", err)

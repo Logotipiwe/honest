@@ -1,4 +1,4 @@
-package infrastructure
+package core
 
 import (
 	"dc_honest/src/pkg"

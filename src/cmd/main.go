@@ -2,12 +2,12 @@ package main
 
 import (
 	"database/sql"
-	"dc_honest/src/internal/adapters/input"
-	"dc_honest/src/internal/adapters/output"
+	"dc_honest/src/internal/adapters"
+	"dc_honest/src/internal/core"
 	"dc_honest/src/internal/core/application"
 	"dc_honest/src/internal/core/service"
-	"dc_honest/src/internal/infrastructure"
-	"dc_honest/src/internal/infrastructure/flyway"
+	"dc_honest/src/internal/infrastructure/ms"
+	"dc_honest/src/internal/infrastructure/ms/flyway"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	. "github.com/logotipiwe/dc_go_config_lib"
@@ -17,7 +17,7 @@ import (
 func main() {
 	LoadDcConfig()
 
-	config := infrastructure.NewConfig()
+	config := core.NewConfig()
 
 	db, err := sql.Open("mysql", config.GetMysqlConnectionStr())
 	if err != nil {
@@ -30,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	decksStorage := output.NewDecksStorageMs(db)
+	decksStorage := ms.NewDecksStorageMs(db)
 
 	decksService := service.NewDecksService(decksStorage)
 
@@ -40,7 +40,7 @@ func main() {
 
 	router := gin.Default()
 
-	_ = input.NewDecksAdapterHttp(router, decksService)
+	_ = adapters.NewDecksAdapterHttp(router, decksService)
 
 	err = router.Run(":82")
 	if err != nil {

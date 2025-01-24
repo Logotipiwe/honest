@@ -18,6 +18,5 @@ func NewDecksService(
 }
 
 func (d *DecksService) GetDecksForMainPage(clientID string) ([]domain.Deck, error) {
-	decks, err := d.storage.GetDecksForClient(clientID)
-	return decks, err
+	return d.storage.GetDecksForClient(clientID)
 }

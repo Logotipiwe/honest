@@ -1,4 +1,4 @@
-package input
+package adapters
 
 import (
 	"dc_honest/src/internal/core/ports/input"
@@ -19,7 +19,7 @@ func NewDecksAdapterHttp(
 	}
 
 	router.GET("/ping", pkg.WithError(d.Ping))
-	router.GET("/decks", pkg.WithError(d.Decks))
+	router.GET("/v1/decks", pkg.WithError(d.Decks))
 
 	return d
 }
@@ -35,6 +35,13 @@ func (d *DecksAdapterHttp) Decks(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	c.JSON(200, gin.H{"ok": true, "decks": decks})
+	dtos := make([]DeckDto, len(decks))
+	for i, deck := range decks {
+		dtos[i] = ToDto(deck)
+	}
+	c.JSON(200, DecksAnswer{
+		Ok:    true,
+		Decks: dtos,
+	})
 	return nil
 }

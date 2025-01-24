@@ -1,7 +1,6 @@
 create table if not exists decks
 (
     id              varchar(255) not null primary key,
-    language_code   varchar(10)  not null,
     name            varchar(255) not null,
     emoji           varchar(255),
     description     text,

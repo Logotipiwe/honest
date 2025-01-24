@@ -8,7 +8,7 @@ import (
 type DeckModel struct {
 	ID          string
 	Name        string
-	Description *string
+	Description string
 	Labels      string
 	Image       string
 	IsHidden    bool
@@ -16,11 +16,15 @@ type DeckModel struct {
 }
 
 func (m DeckModel) ToDeck() domain.Deck {
+	var labels []string = nil
+	if m.Labels != "" {
+		labels = strings.Split(m.Labels, ",")
+	}
 	return domain.Deck{
 		ID:          m.ID,
 		Name:        m.Name,
 		Description: m.Description,
-		Labels:      strings.Split(m.Labels, ";"),
+		Labels:      labels,
 		Image:       m.Image,
 		IsHidden:    m.IsHidden,
 		PromoCode:   m.PromoCode,
