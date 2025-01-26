@@ -24,11 +24,27 @@ func NewDecksAdapterHttp(
 	return d
 }
 
+// Ping godoc
+// @Summary      Do ping
+// @Description  Do ping desc
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  string
+// @Failure      500  {object}  string
+// @Router       /ping [get]
 func (d *DecksAdapterHttp) Ping(c *gin.Context) error {
 	c.JSON(200, gin.H{"ok": true})
 	return nil
 }
 
+// Decks godoc
+// @Summary      Get all public decks
+// @Accept       json
+// @Produce      json
+// @Param		 client_id query string true "client id"
+// @Success      200  {object}  DecksAnswer
+// @Router       /v1/decks [get]
 func (d *DecksAdapterHttp) Decks(c *gin.Context) error {
 	clientID := c.Query("client_id")
 	decks, err := d.service.GetDecksForMainPage(clientID)

@@ -1,0 +1,112 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a honest service api.",
+        "title": "Swagger honest API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:82",
+    "paths": {
+        "/ping": {
+            "get": {
+                "description": "Do ping desc",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Do ping",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/decks": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all public decks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "client id",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/adapters.DecksAnswer"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "adapters.DeckDto": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image_id": {
+                    "type": "string"
+                },
+                "labels": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "adapters.DecksAnswer": {
+            "type": "object",
+            "properties": {
+                "decks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/adapters.DeckDto"
+                    }
+                },
+                "ok": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

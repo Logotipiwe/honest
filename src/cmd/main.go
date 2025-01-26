@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	_ "dc_honest/docs"
 	"dc_honest/src/internal/adapters"
 	"dc_honest/src/internal/core"
 	"dc_honest/src/internal/core/application"
@@ -14,6 +15,15 @@ import (
 	"log"
 )
 
+// @title           Swagger honest API
+// @version         1.0
+// @description     This is a honest service api.
+
+// @host      localhost:82
+// @BasedPath  /
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	LoadDcConfig()
 
@@ -39,8 +49,8 @@ func main() {
 	}
 
 	router := gin.Default()
-
 	_ = adapters.NewDecksAdapterHttp(router, decksService)
+	adapters.HandlerSwaggerRoute(router)
 
 	err = router.Run(":82")
 	if err != nil {

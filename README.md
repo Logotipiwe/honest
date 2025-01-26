@@ -7,13 +7,15 @@
 
 # Swagger
 
-Установка https://github.com/swaggo/swag?tab=readme-ov-file#getting-started
+Генерируется командой ```swag```
+
+Установка команды swag https://github.com/swaggo/swag?tab=readme-ov-file#getting-started
 
 ```shell
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
-для macOS также:
+для macOS также добавление в PATH:
 ```shell
 echo 'export PATH=$HOME/go/bin:$PATH' >> ~/.zshrc
 source ~/.zshrc
@@ -21,13 +23,11 @@ source ~/.zshrc
 
 Перед коммитом - обновить доку
 ```shell
-swag i
+swag i -d ./src/cmd,./src/internal
 ```
 
 Прод - https://logotipiwe.ru/haur/swagger/index.html
 
 # TODO
-- юнит тесты
-- тесты адаптеров - применить там флайвей
 - сваггер
 - скрытые колоды
