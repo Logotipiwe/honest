@@ -12,6 +12,7 @@ jobs:
       name: Checkout env
       with:
         repository: Logotipiwe/dc_vars
+        ref: main
         token: ${{secrets.PAT}}
     - name: Load env
       uses: duskmoon314/action-load-env@v1.1.0
