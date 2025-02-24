@@ -13,7 +13,7 @@ services:
       CONFIG_SERVER_URL: http://config_server
       SERVICE_NAME: honest
       NAMESPACE: dev-dc
-      M_TOKEN: ${M_TOKEN}
+      M_TOKEN: 4321
       #END CONFIG SERVER
     ports:
       - 86:80

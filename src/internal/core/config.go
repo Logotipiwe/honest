@@ -7,23 +7,25 @@ import (
 )
 
 type Config struct {
-	DbLogin     string
-	DbPassword  string
-	DbName      string
-	DbHost      string
-	Port        int
-	SwaggerHost string
+	DbLogin         string
+	DbPassword      string
+	DbName          string
+	DbHost          string
+	Port            int
+	SwaggerHost     string
+	SwaggerBasePath string
 }
 
 func NewConfig() *Config {
 
 	return &Config{
-		DbLogin:     pkg.OsGetNonEmpty("DB_LOGIN"),
-		DbPassword:  pkg.OsGetNonEmpty("DB_PASS"),
-		DbName:      pkg.OsGetNonEmpty("DB_NAME"),
-		DbHost:      pkg.OsGetNonEmpty("DB_HOST"),
-		Port:        getPort(),
-		SwaggerHost: os.Getenv("SWAGGER_HOST"),
+		DbLogin:         pkg.OsGetNonEmpty("DB_LOGIN"),
+		DbPassword:      pkg.OsGetNonEmpty("DB_PASS"),
+		DbName:          pkg.OsGetNonEmpty("DB_NAME"),
+		DbHost:          pkg.OsGetNonEmpty("DB_HOST"),
+		Port:            getPort(),
+		SwaggerHost:     os.Getenv("SWAGGER_HOST"),
+		SwaggerBasePath: os.Getenv("SWAGGER_BASE_PATH"),
 	}
 }
 
