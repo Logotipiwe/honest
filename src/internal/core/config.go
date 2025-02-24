@@ -3,6 +3,7 @@ package core
 import (
 	"dc_honest/src/pkg"
 	"fmt"
+	"os"
 )
 
 type Config struct {
@@ -22,7 +23,7 @@ func NewConfig() *Config {
 		DbName:      pkg.OsGetNonEmpty("DB_NAME"),
 		DbHost:      pkg.OsGetNonEmpty("DB_HOST"),
 		Port:        getPort(),
-		SwaggerHost: pkg.OsGetNonEmpty("SWAGGER_HOST"),
+		SwaggerHost: os.Getenv("SWAGGER_HOST"),
 	}
 }
 

@@ -66,5 +66,8 @@ func main() {
 }
 
 func setupSwagger(config *core.Config) {
+	if config.SwaggerHost == "" {
+		panic("swagger host not set")
+	}
 	docs.SwaggerInfo.Host = config.SwaggerHost
 }

@@ -57,7 +57,7 @@ func TestShuffleHttpAdapter(t *testing.T) {
 
 		for _, tc := range cases {
 			t.Run(tc.Name, func(t *testing.T) {
-				r := httptest.NewRequest("POST", "/v1/decks/"+tc.EntityID+"/shuffle?clientId="+tc.ClientID, nil)
+				r := httptest.NewRequest("POST", "/api/v1/decks/"+tc.EntityID+"/shuffle?clientId="+tc.ClientID, nil)
 				w := httptest.NewRecorder()
 				engine.ServeHTTP(w, r)
 
@@ -84,7 +84,7 @@ func TestShuffleHttpAdapter(t *testing.T) {
 
 		for _, tc := range cases {
 			t.Run(tc.Name, func(t *testing.T) {
-				r := httptest.NewRequest("POST", "/v1/levels/"+tc.EntityID+"/shuffle?clientId="+tc.ClientID, nil)
+				r := httptest.NewRequest("POST", "/api/v1/levels/"+tc.EntityID+"/shuffle?clientId="+tc.ClientID, nil)
 				w := httptest.NewRecorder()
 				engine.ServeHTTP(w, r)
 
