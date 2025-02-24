@@ -20,7 +20,7 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
       with:
-        repository: Logotipiwe/dc_honest
+        repository: Logotipiwe/honest
         ref: main
         token: ${{secrets.PAT}}
 
