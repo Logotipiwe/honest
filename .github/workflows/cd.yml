@@ -31,7 +31,7 @@ jobs:
       id: build_push
       run: |
         ls
-        export IMAGE=${{ env.DOCKER_USER }}/haur:$(date +%s)
+        export IMAGE=${{ env.DOCKER_USER }}/honest:$(date +%s)
         docker build . -t ${IMAGE}
         docker push ${IMAGE}
         echo "IMAGE=${IMAGE}" >> "$GITHUB_ENV"
@@ -40,7 +40,7 @@ jobs:
       with:
         local: ./deploy
         concurrency: 20
-        remote: /kuber/haur
+        remote: /kuber/honest
         host: ${{ env.DC_HOST }}
         username: ${{ env.SSH_USER }}
         password: ${{ env.SSH_PASSWORD }}
@@ -56,5 +56,5 @@ jobs:
           export IMAGE=${{ env.IMAGE }}
           export M_TOKEN=${{ env.M_TOKEN }}
           
-          docker-compose -f /kuber/haur/haur.yml down --remove-orphans
-          docker-compose -f /kuber/haur/haur.yml up -d
+          docker-compose -f /kuber/honest/honest.yml down --remove-orphans
+          docker-compose -f /kuber/honest/honest.yml up -d

@@ -7,6 +7,7 @@
       <env name="M_TOKEN" value="4321" />
       <env name="SERVICE_NAME" value="honest" />
       <env name="NAMESPACE" value="dev" />
+      <env name="PORT" value="82" />
     </envs>
     <kind value="PACKAGE" />
     <package value="dc_honest/src/cmd" />

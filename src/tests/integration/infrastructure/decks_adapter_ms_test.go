@@ -16,7 +16,7 @@ func p(v bool) *bool {
 }
 
 func TestDecksAdapter(t *testing.T) {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		t.Fatal("Error loading .env file")
 	}
@@ -25,8 +25,8 @@ func TestDecksAdapter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	storage := ms.NewDecksStorageMs(db)
-	fw := flyway.NewFlyway(db, "../../../data/migrations")
+	storage := ms.NewDecksMsStorage(db)
+	fw := flyway.NewFlyway(db, "../../../../data/migrations")
 
 	type TestCase struct {
 		Name          string
@@ -66,10 +66,14 @@ func TestDecksAdapter(t *testing.T) {
 				assert.Error(t, err)
 				return
 			} else {
-				assert.Nil(t, err)
+				if !assert.Nil(t, err) {
+					return
+				}
 			}
 			decks, err := storage.GetDecksForClient("1")
-			assert.Nil(t, err)
+			if !assert.Nil(t, err) {
+				return
+			}
 			assert.Equal(t, len(tc.Expected), len(decks))
 			for i, deck := range tc.Expected {
 				assert.EqualExportedValues(t, deck, decks[i])

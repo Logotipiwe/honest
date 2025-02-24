@@ -7,15 +7,16 @@ import (
 	"strings"
 )
 
-type DecksStorageMs struct {
+type DecksMsStorage struct {
 	db *sql.DB
 }
 
-const all = "id, name, description, labels, vector_image_id, hidden, promo"
+const all = ""
 
-func (d *DecksStorageMs) GetDecksForClient(clientID string) ([]domain.Deck, error) {
+func (d *DecksMsStorage) GetDecksForClient(clientID string) ([]domain.Deck, error) {
 	decks := make([]domain.Deck, 0)
-	rows, err := d.db.Query("SELECT " + all + " FROM decks where !hidden")
+	rows, err := d.db.Query(`SELECT id, name, description, labels, vector_image_id, hidden, promo 
+		FROM decks where !hidden`)
 	if err != nil {
 		return decks, err
 	}
@@ -33,7 +34,7 @@ func (d *DecksStorageMs) GetDecksForClient(clientID string) ([]domain.Deck, erro
 	return decks, nil
 }
 
-func (d *DecksStorageMs) SaveDecks(decks []domain.Deck) error {
+func (d *DecksMsStorage) SaveDecks(decks []domain.Deck) error {
 	tx, err := d.db.Begin()
 	if err != nil {
 		return err
@@ -45,8 +46,12 @@ func (d *DecksStorageMs) SaveDecks(decks []domain.Deck) error {
 	for _, deck := range decks {
 		_, err := tx.Exec(fmt.Sprintf(
 			"INSERT INTO decks (%v) VALUES (%v)",
-			all, strings.Join(q, ","),
-		), deck.ID, deck.Name, deck.Description, strings.Join(deck.Labels, ";"), deck.Image, deck.IsHidden, deck.PromoCode)
+			"id, name, description, labels, vector_image_id, hidden, promo, language_code",
+			"?,?,?,?,?,?,?,?",
+		),
+			deck.ID, deck.Name, deck.Description, strings.Join(deck.Labels, ";"), deck.Image, deck.IsHidden,
+			deck.PromoCode, "RU",
+		)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -59,10 +64,10 @@ func (d *DecksStorageMs) SaveDecks(decks []domain.Deck) error {
 	return nil
 }
 
-func NewDecksStorageMs(
+func NewDecksMsStorage(
 	db *sql.DB,
-) *DecksStorageMs {
-	return &DecksStorageMs{
+) *DecksMsStorage {
+	return &DecksMsStorage{
 		db: db,
 	}
 }

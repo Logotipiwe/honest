@@ -64,6 +64,64 @@
                     }
                 }
             }
+        },
+        "/v1/decks/{deckId}/shuffle": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Перемешать вопросы в колоде и начать сначала",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client id",
+                        "name": "clientId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deck id",
+                        "name": "deckId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/levels/{levelId}/shuffle": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Перемешать вопросы в уровне и начать сначала",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client id",
+                        "name": "clientId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Level id",
+                        "name": "levelId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
     },
     "definitions": {

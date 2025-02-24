@@ -54,6 +54,15 @@ func OsGetInt64NonEmpty(key string) int64 {
 	return value
 }
 
+func OsGetEnvInt(key string) *int {
+	valueStr := os.Getenv(key)
+	value, err := strconv.Atoi(valueStr)
+	if err != nil {
+		return nil
+	}
+	return &value
+}
+
 func Some[T any](slice []T, predicate func(T) bool) bool {
 	for _, v := range slice {
 		if predicate(v) {

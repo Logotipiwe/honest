@@ -10,15 +10,27 @@ type Config struct {
 	DbPassword string
 	DbName     string
 	DbHost     string
+	Port       int
 }
 
 func NewConfig() *Config {
+
 	return &Config{
 		DbLogin:    pkg.OsGetNonEmpty("DB_LOGIN"),
 		DbPassword: pkg.OsGetNonEmpty("DB_PASS"),
 		DbName:     pkg.OsGetNonEmpty("DB_NAME"),
 		DbHost:     pkg.OsGetNonEmpty("DB_HOST"),
+		Port:       getPort(),
 	}
+}
+
+func getPort() int {
+	var port = 80
+	osPort := pkg.OsGetEnvInt("PORT")
+	if osPort != nil {
+		port = *osPort
+	}
+	return port
 }
 
 func (c Config) GetMysqlConnectionStr() string {

@@ -27,7 +27,7 @@ func initAdapter(t *testing.T) (
 	*adapters.DecksAdapterHttp,
 	*gin.Engine,
 ) {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		t.Fatal("Error loading .env file")
 	}

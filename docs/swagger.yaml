@@ -70,4 +70,42 @@ paths:
           schema:
             $ref: '#/definitions/adapters.DecksAnswer'
       summary: Get all public decks
+  /v1/decks/{deckId}/shuffle:
+    post:
+      parameters:
+      - description: Client id
+        in: query
+        name: clientId
+        required: true
+        type: string
+      - description: Deck id
+        in: path
+        name: deckId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Перемешать вопросы в колоде и начать сначала
+  /v1/levels/{levelId}/shuffle:
+    post:
+      parameters:
+      - description: Client id
+        in: query
+        name: clientId
+        required: true
+        type: string
+      - description: Level id
+        in: path
+        name: levelId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Перемешать вопросы в уровне и начать сначала
 swagger: "2.0"

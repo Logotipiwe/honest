@@ -2,8 +2,10 @@
 
 # Локальный запуск
 
-- Поднять конфиг сервер
-- Запустить go конфиг
+- Поднять infra сервисы:
+  - mysql
+  - config server
+- Запустить ран конфиг "Go"
 
 # Swagger
 
@@ -26,8 +28,4 @@ source ~/.zshrc
 swag i -d ./src/cmd,./src/internal
 ```
 
-Прод - https://logotipiwe.ru/haur/swagger/index.html
-
-# TODO
-- сваггер
-- скрытые колоды
+Прод - https://logotipiwe.ru/honest/swagger/index.html

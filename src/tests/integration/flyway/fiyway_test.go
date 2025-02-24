@@ -15,7 +15,7 @@ import (
 )
 
 func setupRealDB(t *testing.T) *sql.DB {
-	godotenv.Load("../.env")
+	godotenv.Load("../../.env")
 	config := core.NewConfig()
 	db, err := sql.Open("mysql", config.GetMysqlConnectionStr())
 	if err != nil {
@@ -54,6 +54,7 @@ func TestMigrate(t *testing.T) {
 	writeMigrationFile(t, dir, "V2__add_column.sql", "ALTER TABLE test ADD COLUMN name VARCHAR(255);")
 
 	fw := NewFlyway(db, dir)
+	fw.Clean()
 	if err := fw.Migrate(); err != nil {
 		t.Fatalf("Migration failed: %v", err)
 	}
@@ -76,6 +77,7 @@ func TestMigrate_DuplicateMigration(t *testing.T) {
 
 	writeMigrationFile(t, dir, "V1__init.sql", "CREATE TABLE test (id INT PRIMARY KEY);")
 
+	fw.Clean()
 	_ = fw.Migrate()
 	if err := fw.Migrate(); err != nil {
 		t.Fatal("Expected skipped migration, but got err", err)

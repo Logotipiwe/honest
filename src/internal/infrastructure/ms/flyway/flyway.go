@@ -81,7 +81,8 @@ func (f *Flyway) Migrate() error {
 			if appliedHash == hash {
 				continue // Skip already applied and unchanged migrations
 			} else {
-				return fmt.Errorf("migration file %s has changed after being applied", file)
+				return fmt.Errorf("migration file %s has changed after being applied. Hash in db is %s "+
+					"while locally resolved is %s", file, appliedHash, hash)
 			}
 		}
 

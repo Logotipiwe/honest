@@ -13,6 +13,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	. "github.com/logotipiwe/dc_go_config_lib"
 	"log"
+	"strconv"
 )
 
 // @title           Swagger honest API
@@ -40,19 +41,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	decksStorage := ms.NewDecksStorageMs(db)
+	decksStorage := ms.NewDecksMsStorage(db)
+	shuffleRepo := ms.NewShuffleRepoMs(db)
 
 	decksService := service.NewDecksService(decksStorage)
+	shuffleService := service.NewShuffleService(shuffleRepo)
 
 	_ = application.App{
-		DecksPort: decksService,
+		DecksPort:   decksService,
+		ShufflePort: shuffleService,
 	}
 
 	router := gin.Default()
 	_ = adapters.NewDecksAdapterHttp(router, decksService)
+	_ = adapters.NewShuffleHttpAdapter(router, shuffleService)
 	adapters.HandlerSwaggerRoute(router)
 
-	err = router.Run(":82")
+	err = router.Run(":" + strconv.Itoa(config.Port))
 	if err != nil {
 		log.Fatal(err)
 	}
