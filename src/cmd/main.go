@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"dc_honest/docs"
 	_ "dc_honest/docs"
 	"dc_honest/src/internal/adapters"
 	"dc_honest/src/internal/core"
@@ -20,7 +21,6 @@ import (
 // @version         1.0
 // @description     This is a honest service api.
 
-// @host      localhost:82
 // @BasedPath  /
 
 // @externalDocs.description  OpenAPI
@@ -57,8 +57,14 @@ func main() {
 	_ = adapters.NewShuffleHttpAdapter(router, shuffleService)
 	adapters.HandlerSwaggerRoute(router)
 
+	setupSwagger(config)
+
 	err = router.Run(":" + strconv.Itoa(config.Port))
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func setupSwagger(config *core.Config) {
+	docs.SwaggerInfo.Host = config.SwaggerHost
 }

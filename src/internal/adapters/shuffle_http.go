@@ -20,8 +20,8 @@ func NewShuffleHttpAdapter(
 		service: service,
 	}
 
-	router.POST("/v1/decks/:deckId/shuffle", pkg.WithError(a.ShuffleDeck))
-	router.POST("/v1/levels/:levelId/shuffle", pkg.WithError(a.shuffleLevel))
+	router.POST("/api/v1/decks/:deckId/shuffle", pkg.WithError(a.ShuffleDeck))
+	router.POST("/api/v1/levels/:levelId/shuffle", pkg.WithError(a.shuffleLevel))
 
 	return a
 }
@@ -32,7 +32,7 @@ func NewShuffleHttpAdapter(
 // @Param 		 deckId path string true "Deck id"
 // @Produce      json
 // @Success      200
-// @Router       /v1/decks/{deckId}/shuffle [post]
+// @Router       /api/v1/decks/{deckId}/shuffle [post]
 func (a *ShuffleHttpAdapter) ShuffleDeck(ctx *gin.Context) error {
 	deckID := ctx.Param("deckId")
 	clientIdStr := ctx.Query("clientId")
@@ -49,7 +49,7 @@ func (a *ShuffleHttpAdapter) ShuffleDeck(ctx *gin.Context) error {
 // @Param 		 levelId path string true "Level id"
 // @Produce      json
 // @Success      200
-// @Router       /v1/levels/{levelId}/shuffle [post]
+// @Router       /api/v1/levels/{levelId}/shuffle [post]
 func (a *ShuffleHttpAdapter) shuffleLevel(ctx *gin.Context) error {
 	levelID := ctx.Param("levelId")
 	clientIdStr := ctx.Query("clientId")
