@@ -116,6 +116,7 @@ func (f *Flyway) Migrate() error {
 		if err != nil {
 			return err
 		}
+		log.Printf("Successfully applied migration: %s", file)
 	}
 
 	log.Println("Migrations applied successfully.")
@@ -158,6 +159,14 @@ func (f *Flyway) Clean() error {
 
 	log.Println("Database cleaned successfully.")
 	return nil
+}
+
+func (f *Flyway) CleanMigrate() error {
+	err := f.Clean()
+	if err != nil {
+		return err
+	}
+	return f.Migrate()
 }
 
 // Close closes the database connection

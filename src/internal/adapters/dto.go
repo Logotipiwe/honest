@@ -24,3 +24,21 @@ func ToDto(d domain.Deck) DeckDto {
 		ImageID:     d.Image,
 	}
 }
+
+type QuestionOutput struct {
+	ID             string  `json:"id"`
+	Text           string  `json:"text"`
+	LevelID        string  `json:"level_id"`
+	AdditionalText *string `json:"additional_text"`
+	IsLast         bool    `json:"is_last"`
+}
+
+func ToOutputDto(q domain.Question, isLast bool) QuestionOutput {
+	return QuestionOutput{
+		ID:             q.ID,
+		Text:           q.Text,
+		LevelID:        q.Level.ID,
+		AdditionalText: q.AdditionalText,
+		IsLast:         isLast,
+	}
+}

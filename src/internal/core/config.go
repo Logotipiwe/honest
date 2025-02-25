@@ -14,6 +14,18 @@ type Config struct {
 	Port            int
 	SwaggerHost     string
 	SwaggerBasePath string
+	LastCardText    string
+}
+
+var (
+	config *Config
+)
+
+func GetConfig() *Config {
+	if config == nil {
+		config = NewConfig()
+	}
+	return config
 }
 
 func NewConfig() *Config {
@@ -26,6 +38,7 @@ func NewConfig() *Config {
 		Port:            getPort(),
 		SwaggerHost:     os.Getenv("SWAGGER_HOST"),
 		SwaggerBasePath: os.Getenv("SWAGGER_BASE_PATH"),
+		LastCardText:    pkg.OsGetNonEmpty("LAST_CARD_TEXT"),
 	}
 }
 

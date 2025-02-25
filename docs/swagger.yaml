@@ -23,16 +23,89 @@ definitions:
       ok:
         type: boolean
     type: object
+  adapters.QuestionOutput:
+    properties:
+      additional_text:
+        type: string
+      id:
+        type: string
+      is_last:
+        type: boolean
+      level_id:
+        type: string
+      text:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: localhost:82
 info:
   contact: {}
   description: This is a honest service api.
   title: Swagger honest API
   version: "1.0"
 paths:
+  /api/v1/decks/{deckId}/shuffle:
+    post:
+      parameters:
+      - description: Client id
+        in: query
+        name: clientId
+        required: true
+        type: string
+      - description: Deck id
+        in: path
+        name: deckId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Перемешать вопросы в колоде и начать сначала
+  /api/v1/levels/{levelId}/shuffle:
+    post:
+      parameters:
+      - description: Client id
+        in: query
+        name: clientId
+        required: true
+        type: string
+      - description: Level id
+        in: path
+        name: levelId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Перемешать вопросы в уровне и начать сначала
+  /api/v1/question:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: client id
+        in: query
+        name: client_id
+        required: true
+        type: string
+      - description: level id
+        in: query
+        name: level_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/adapters.QuestionOutput'
+      summary: Получить рандомный вопрос
   /ping:
     get:
       consumes:
@@ -70,42 +143,4 @@ paths:
           schema:
             $ref: '#/definitions/adapters.DecksAnswer'
       summary: Get all public decks
-  /v1/decks/{deckId}/shuffle:
-    post:
-      parameters:
-      - description: Client id
-        in: query
-        name: clientId
-        required: true
-        type: string
-      - description: Deck id
-        in: path
-        name: deckId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      summary: Перемешать вопросы в колоде и начать сначала
-  /v1/levels/{levelId}/shuffle:
-    post:
-      parameters:
-      - description: Client id
-        in: query
-        name: clientId
-        required: true
-        type: string
-      - description: Level id
-        in: path
-        name: levelId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      summary: Перемешать вопросы в уровне и начать сначала
 swagger: "2.0"

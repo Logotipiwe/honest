@@ -11,8 +11,6 @@ type DecksMsStorage struct {
 	db *sql.DB
 }
 
-const all = ""
-
 func (d *DecksMsStorage) GetDecksForClient(clientID string) ([]domain.Deck, error) {
 	decks := make([]domain.Deck, 0)
 	rows, err := d.db.Query(`SELECT id, name, description, labels, vector_image_id, hidden, promo 
@@ -34,14 +32,14 @@ func (d *DecksMsStorage) GetDecksForClient(clientID string) ([]domain.Deck, erro
 	return decks, nil
 }
 
+func (d *DecksMsStorage) SaveDeck(deck domain.Deck) error {
+	return d.SaveDecks([]domain.Deck{deck})
+}
+
 func (d *DecksMsStorage) SaveDecks(decks []domain.Deck) error {
 	tx, err := d.db.Begin()
 	if err != nil {
 		return err
-	}
-	q := make([]string, 0)
-	for range strings.Split(all, ", ") {
-		q = append(q, "?")
 	}
 	for _, deck := range decks {
 		_, err := tx.Exec(fmt.Sprintf(

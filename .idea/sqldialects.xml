@@ -3,5 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$USER_HOME$/Downloads/haur (1).sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/data/migrations/V1__init.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/data/migrations/V2__history_id_default.sql" dialect="MySQL" />
   </component>
 </project>

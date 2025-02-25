@@ -14,12 +14,14 @@ type Level struct {
 	ID          string
 	Deck        Deck
 	Name        string
+	Order       int
 	Description *string
 	Color       string
 }
 
 type Question struct {
-	ID    string
-	Level Level
-	Text  string
+	ID             string
+	Level          Level
+	Text           string
+	AdditionalText *string
 }

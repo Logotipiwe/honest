@@ -15,6 +15,99 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/decks/{deckId}/shuffle": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Перемешать вопросы в колоде и начать сначала",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client id",
+                        "name": "clientId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deck id",
+                        "name": "deckId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/levels/{levelId}/shuffle": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Перемешать вопросы в уровне и начать сначала",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client id",
+                        "name": "clientId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Level id",
+                        "name": "levelId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/question": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Получить рандомный вопрос",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "client id",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "level id",
+                        "name": "level_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/adapters.QuestionOutput"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "Do ping desc",
@@ -71,64 +164,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/v1/decks/{deckId}/shuffle": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Перемешать вопросы в колоде и начать сначала",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Client id",
-                        "name": "clientId",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Deck id",
-                        "name": "deckId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/v1/levels/{levelId}/shuffle": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Перемешать вопросы в уровне и начать сначала",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Client id",
-                        "name": "clientId",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Level id",
-                        "name": "levelId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -166,6 +201,26 @@ const docTemplate = `{
                 },
                 "ok": {
                     "type": "boolean"
+                }
+            }
+        },
+        "adapters.QuestionOutput": {
+            "type": "object",
+            "properties": {
+                "additional_text": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_last": {
+                    "type": "boolean"
+                },
+                "level_id": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
                 }
             }
         }

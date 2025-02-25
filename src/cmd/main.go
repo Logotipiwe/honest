@@ -28,7 +28,7 @@ import (
 func main() {
 	LoadDcConfig()
 
-	config := core.NewConfig()
+	config := core.GetConfig()
 
 	db, err := sql.Open("mysql", config.GetMysqlConnectionStr())
 	if err != nil {
@@ -43,9 +43,12 @@ func main() {
 
 	decksStorage := ms.NewDecksMsStorage(db)
 	shuffleRepo := ms.NewShuffleRepoMs(db)
+	questionsRepo := ms.NewQuestionMsRepo(db)
+	levelsRepo := ms.NewLevelsMsRepo(db)
 
 	decksService := service.NewDecksService(decksStorage)
 	shuffleService := service.NewShuffleService(shuffleRepo)
+	questionsService := service.NewQuestionsService(db, questionsRepo)
 
 	_ = application.App{
 		DecksPort:   decksService,
@@ -55,6 +58,7 @@ func main() {
 	router := gin.Default()
 	_ = adapters.NewDecksAdapterHttp(router, decksService)
 	_ = adapters.NewShuffleHttpAdapter(router, shuffleService)
+	_ = adapters.NewQuestionsAdapterHttp(router, questionsService, levelsRepo)
 	adapters.HandlerSwaggerRoute(router)
 
 	setupSwagger(config)
