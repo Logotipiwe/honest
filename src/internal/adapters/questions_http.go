@@ -28,13 +28,13 @@ func NewQuestionsAdapterHttp(router *gin.Engine, service input.QuestionPort, rep
 // @Summary      Получить рандомный вопрос
 // @Accept       json
 // @Produce      json
-// @Param		 client_id query string true "client id"
-// @Param		 level_id query string true "level id"
+// @Param		 clientId query string true "client id"
+// @Param		 levelId query string true "level id"
 // @Success      200  {object}  QuestionOutput
 // @Router       /api/v1/question [get]
 func (q *QuestionsAdapterHttp) GetRandQuestion(c *gin.Context) error {
-	clientID := c.Query("client_id")
-	levelID := c.Query("level_id")
+	clientID := c.Query("clientId")
+	levelID := c.Query("levelId")
 
 	exists, err := q.levelsRepo.LevelExists(levelID)
 	if err != nil {
