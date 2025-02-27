@@ -2,63 +2,45 @@ package adapters
 
 import (
 	"dc_honest/src/internal/adapters"
-	"dc_honest/src/internal/core"
 	"dc_honest/src/internal/core/domain"
 	. "dc_honest/src/internal/core/service"
 	"dc_honest/src/internal/infrastructure/mock"
+	. "dc_honest/src/pkg"
+	"dc_honest/src/tests"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
 )
 
-func readDtos(t *testing.T, w *httptest.ResponseRecorder) adapters.DecksAnswer {
-	dtos := adapters.DecksAnswer{}
+func readDtos(t *testing.T, w *httptest.ResponseRecorder) []adapters.DeckOutput {
+	var dtos []adapters.DeckOutput
 	err := json.Unmarshal(w.Body.Bytes(), &dtos)
 	assert.Nil(t, err)
 	return dtos
 }
 
-func initAdapter(t *testing.T) (
-	*core.Config,
-	*mock.DecksStorageMock,
-	*adapters.DecksAdapterHttp,
-	*gin.Engine,
-) {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		t.Fatal("Error loading .env file")
-	}
-	config := core.NewConfig()
+func TestDecksHttpAdapter(t *testing.T) {
+	tests.LoadTestEnv(t)
 	storage := mock.NewDecksStorageMock()
 	service := NewDecksService(storage)
 	engine := gin.Default()
-	adapter := adapters.NewDecksAdapterHttp(engine, service)
 
-	return config, storage, adapter, engine
-}
-
-func cleanup(storage *mock.DecksStorageMock) {
-	storage.Clean()
-}
-
-func TestDecksHttpAdapter(t *testing.T) {
-	_, storage, _, engine := initAdapter(t)
-
-	defer cleanup(storage)
+	adapters.NewDecksAdapterHttp(engine, service)
 
 	type TestCase struct {
-		Name     string
-		ClientID string
-		Decks    []domain.Deck
-		Expected []adapters.DeckDto
+		Name             string
+		ClientID         string
+		DecksReturned    []domain.Deck
+		ExpectedCalls    [][]any
+		UseCamelClientID *bool
+		Expected         *[]adapters.DeckOutput
 	}
 
 	cases := []TestCase{
 		{Name: "Works", ClientID: "1",
-			Decks: []domain.Deck{
+			DecksReturned: []domain.Deck{
 				{
 					ID:          "1",
 					Name:        "n1",
@@ -66,7 +48,6 @@ func TestDecksHttpAdapter(t *testing.T) {
 					Labels:      nil,
 					Image:       "image1",
 					IsHidden:    false,
-					PromoCode:   "",
 				},
 				{
 					ID:          "2",
@@ -75,10 +56,12 @@ func TestDecksHttpAdapter(t *testing.T) {
 					Labels:      []string{"l1", "l2"},
 					Image:       "image2",
 					IsHidden:    false,
-					PromoCode:   "",
 				},
 			},
-			Expected: []adapters.DeckDto{
+			ExpectedCalls: [][]any{
+				{"1"},
+			},
+			Expected: &[]adapters.DeckOutput{
 				{
 					ID:          "1",
 					Name:        "n1",
@@ -95,19 +78,38 @@ func TestDecksHttpAdapter(t *testing.T) {
 				},
 			},
 		},
+		{
+			Name:             "Works with camel clientId param",
+			ClientID:         "4",
+			UseCamelClientID: P(true),
+			ExpectedCalls: [][]any{
+				{"4"},
+			},
+		},
 	}
 
 	for _, tc := range cases {
 		t.Run(tc.Name, func(t *testing.T) {
-			storage.SetDecks(tc.Decks)
-			r := httptest.NewRequest("GET", "/v1/decks?client_id="+tc.ClientID, nil)
+			defer storage.Clean()
+			storage.SetDecks(tc.DecksReturned)
+			var clientIdKey string
+			if tc.UseCamelClientID != nil && *tc.UseCamelClientID {
+				clientIdKey = "clientId"
+			} else {
+				clientIdKey = "client_id"
+			}
+			r := httptest.NewRequest("GET", "/v1/decks?"+clientIdKey+"="+tc.ClientID, nil)
 			w := httptest.NewRecorder()
 			engine.ServeHTTP(w, r)
 
+			assert.Equal(t, tc.ExpectedCalls, storage.GetAvailableDecksCalls)
+
 			assert.Equal(t, 200, w.Code)
 			dtos := readDtos(t, w)
-			assert.True(t, dtos.Ok)
-			assert.Equal(t, len(tc.Decks), len(dtos.Decks))
+			if tc.Expected != nil {
+				assert.Equal(t, len(*tc.Expected), len(dtos))
+				assert.True(t, SameElements(dtos, *tc.Expected))
+			}
 		})
 	}
 }

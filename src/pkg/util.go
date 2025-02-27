@@ -3,6 +3,7 @@ package pkg
 import (
 	"github.com/gin-gonic/gin"
 	"os"
+	"reflect"
 	"strconv"
 )
 
@@ -79,4 +80,24 @@ func OsGetIntNonEmpty(key string) int {
 		panic("Value in environment variable is not int: " + key)
 	}
 	return value
+}
+
+func P[T any](arg T) *T {
+	return &arg
+}
+
+func SameElements[T any](elements []T, required []T) bool {
+	for _, req := range required {
+		found := false
+		for _, el := range elements {
+			if reflect.DeepEqual(req, el) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
 }

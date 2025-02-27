@@ -4,6 +4,7 @@ import (
 	"dc_honest/src/internal/core/domain"
 	"dc_honest/src/internal/core/service"
 	"dc_honest/src/internal/infrastructure/mock"
+	. "dc_honest/src/pkg"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -31,7 +32,6 @@ func TestGetDecksForMainPage(t *testing.T) {
 					Labels:      nil,
 					Image:       "",
 					IsHidden:    false,
-					PromoCode:   "",
 				},
 				{
 					ID:          "2",
@@ -40,7 +40,7 @@ func TestGetDecksForMainPage(t *testing.T) {
 					Labels:      []string{"l1", "l2"},
 					Image:       "im",
 					IsHidden:    false,
-					PromoCode:   "promo",
+					PromoCode:   P("promo"),
 				},
 			},
 			[]domain.Deck{
@@ -51,7 +51,6 @@ func TestGetDecksForMainPage(t *testing.T) {
 					Labels:      nil,
 					Image:       "",
 					IsHidden:    false,
-					PromoCode:   "",
 				},
 				{
 					ID:          "2",
@@ -60,7 +59,7 @@ func TestGetDecksForMainPage(t *testing.T) {
 					Labels:      []string{"l1", "l2"},
 					Image:       "im",
 					IsHidden:    false,
-					PromoCode:   "promo",
+					PromoCode:   P("promo"),
 				},
 			},
 		},
@@ -70,7 +69,7 @@ func TestGetDecksForMainPage(t *testing.T) {
 		t.Run(tc.Name, func(t *testing.T) {
 			defer storage.Clean()
 			storage.SetDecks(tc.Decks)
-			result, err := decksService.GetDecksForMainPage(tc.ClientID)
+			result, err := decksService.GetAvailableDecks(tc.ClientID)
 			assert.Nil(t, err)
 			assert.Equal(t, len(tc.Expected), len(result))
 			for i, d := range tc.Expected {

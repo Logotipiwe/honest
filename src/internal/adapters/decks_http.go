@@ -44,20 +44,20 @@ func (d *DecksAdapterHttp) Ping(c *gin.Context) error {
 // @Produce      json
 // @Param		 client_id query string true "client id"
 // @Success      200  {object}  DecksAnswer
-// @Router       /v1/decks [get]
+// @Router       /api/v1/decks [get]
 func (d *DecksAdapterHttp) Decks(c *gin.Context) error {
-	clientID := c.Query("client_id")
-	decks, err := d.service.GetDecksForMainPage(clientID)
+	clientID := c.Query("clientId")
+	if clientId2 := c.Query("client_id"); clientId2 != "" {
+		clientID = clientId2
+	}
+	decks, err := d.service.GetAvailableDecks(clientID)
 	if err != nil {
 		return err
 	}
-	dtos := make([]DeckDto, len(decks))
+	dtos := make([]DeckOutput, len(decks))
 	for i, deck := range decks {
-		dtos[i] = ToDto(deck)
+		dtos[i] = ToOutput(deck)
 	}
-	c.JSON(200, DecksAnswer{
-		Ok:    true,
-		Decks: dtos,
-	})
+	c.JSON(200, dtos)
 	return nil
 }

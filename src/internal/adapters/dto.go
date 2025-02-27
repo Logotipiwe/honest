@@ -2,12 +2,7 @@ package adapters
 
 import "dc_honest/src/internal/core/domain"
 
-type DecksAnswer struct {
-	Ok    bool      `json:"ok"`
-	Decks []DeckDto `json:"decks"`
-}
-
-type DeckDto struct {
+type DeckOutput struct {
 	ID          string   `json:"id"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
@@ -15,8 +10,8 @@ type DeckDto struct {
 	ImageID     string   `json:"image_id"`
 }
 
-func ToDto(d domain.Deck) DeckDto {
-	return DeckDto{
+func ToOutput(d domain.Deck) DeckOutput {
+	return DeckOutput{
 		ID:          d.ID,
 		Name:        d.Name,
 		Description: d.Description,

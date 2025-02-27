@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go test tests" type="GoTestRunConfiguration" factoryName="Go Test" nameIsGenerated="true">
+    <module name="dc_honest" />
+    <working_directory value="$PROJECT_DIR$/src/tests" />
+    <root_directory value="$PROJECT_DIR$" />
+    <kind value="DIRECTORY" />
+    <package value="dc_honest/src/tests" />
+    <directory value="$PROJECT_DIR$/src/tests" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>

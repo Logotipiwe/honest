@@ -7,7 +7,7 @@ type Deck struct {
 	Labels      []string
 	Image       string
 	IsHidden    bool
-	PromoCode   string
+	PromoCode   *string
 }
 
 type Level struct {

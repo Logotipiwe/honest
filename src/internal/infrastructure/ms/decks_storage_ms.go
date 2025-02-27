@@ -11,10 +11,14 @@ type DecksMsStorage struct {
 	db *sql.DB
 }
 
-func (d *DecksMsStorage) GetDecksForClient(clientID string) ([]domain.Deck, error) {
+func (d *DecksMsStorage) GetAvailableDecks(clientID string) ([]domain.Deck, error) {
 	decks := make([]domain.Deck, 0)
 	rows, err := d.db.Query(`SELECT id, name, description, labels, vector_image_id, hidden, promo 
-		FROM decks where !hidden`)
+		FROM decks 
+		WHERE !hidden OR (
+		    hidden AND id IN (select deck_id FROM unlocked_decks WHERE client_id = ?)
+		)
+	`, clientID)
 	if err != nil {
 		return decks, err
 	}
@@ -60,6 +64,12 @@ func (d *DecksMsStorage) SaveDecks(decks []domain.Deck) error {
 		return err
 	}
 	return nil
+}
+
+func (d *DecksMsStorage) UnlockDeck(clientID, deckID string) error {
+	_, err := d.db.Exec("INSERT INTO unlocked_decks (client_id, deck_id) VALUES (?, ?)",
+		clientID, deckID)
+	return err
 }
 
 func NewDecksMsStorage(

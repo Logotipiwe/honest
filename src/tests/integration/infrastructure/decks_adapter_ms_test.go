@@ -6,14 +6,11 @@ import (
 	"dc_honest/src/internal/core/domain"
 	"dc_honest/src/internal/infrastructure/ms"
 	"dc_honest/src/internal/infrastructure/ms/flyway"
+	. "dc_honest/src/pkg"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
-
-func p(v bool) *bool {
-	return &v
-}
 
 func TestDecksAdapter(t *testing.T) {
 	err := godotenv.Load("../../.env")
@@ -31,6 +28,8 @@ func TestDecksAdapter(t *testing.T) {
 	type TestCase struct {
 		Name          string
 		Decks         []domain.Deck
+		UnlockedDecks *[]struct{ clientID, deckID string }
+		ClientID      string
 		Expected      []domain.Deck
 		ExpectSaveErr *bool
 	}
@@ -39,28 +38,50 @@ func TestDecksAdapter(t *testing.T) {
 		{
 			Name: "Promo can't duplicate",
 			Decks: []domain.Deck{
-				{ID: "1", Name: "name 1", PromoCode: "c"},
-				{ID: "2", Name: "name 2", PromoCode: "c"},
+				{ID: "1", Name: "name 1", PromoCode: P("c")},
+				{ID: "2", Name: "name 2", PromoCode: P("c")},
 			},
+			ClientID:      "1",
 			Expected:      []domain.Deck{},
-			ExpectSaveErr: p(true),
+			ExpectSaveErr: P(true),
 		},
 		{
 			Name: "Doesn't show hidden decks",
 			Decks: []domain.Deck{
-				{ID: "1", Name: "name 1", PromoCode: "c"},
+				{ID: "1", Name: "name 1", PromoCode: P("c")},
 				{ID: "2", Name: "name 2", IsHidden: true},
 			},
+			ClientID: "1",
 			Expected: []domain.Deck{
-				{ID: "1", Name: "name 1", PromoCode: "c"},
+				{ID: "1", Name: "name 1", PromoCode: P("c")},
+			},
+		},
+		{
+			Name: "Show unlocked hidden decks",
+			Decks: []domain.Deck{
+				{ID: "1", Name: "name 1", IsHidden: false},
+				{ID: "2", Name: "name 2", IsHidden: true},
+				{ID: "3", Name: "name 3", IsHidden: true},
+				{ID: "4", Name: "name 4", IsHidden: true},
+			},
+			UnlockedDecks: &[]struct{ clientID, deckID string }{
+				{clientID: "client_1", deckID: "3"},
+				{clientID: "client_1", deckID: "4"},
+				{clientID: "client_2", deckID: "2"},
+			},
+			ClientID: "client_1",
+			Expected: []domain.Deck{
+				{ID: "1", Name: "name 1", IsHidden: false},
+				{ID: "3", Name: "name 3", IsHidden: true},
+				{ID: "4", Name: "name 4", IsHidden: true},
 			},
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			defer fw.Clean()
 			assert.Nil(t, fw.Migrate())
+			defer fw.Clean()
 			err := storage.SaveDecks(tc.Decks)
 			if tc.ExpectSaveErr != nil && *tc.ExpectSaveErr {
 				assert.Error(t, err)
@@ -70,7 +91,15 @@ func TestDecksAdapter(t *testing.T) {
 					return
 				}
 			}
-			decks, err := storage.GetDecksForClient("1")
+			if tc.UnlockedDecks != nil {
+				for _, deckToUnlock := range *tc.UnlockedDecks {
+					err := storage.UnlockDeck(deckToUnlock.clientID, deckToUnlock.deckID)
+					if !assert.Nil(t, err) {
+						return
+					}
+				}
+			}
+			decks, err := storage.GetAvailableDecks(tc.ClientID)
 			if !assert.Nil(t, err) {
 				return
 			}

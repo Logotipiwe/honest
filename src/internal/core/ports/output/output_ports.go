@@ -6,7 +6,8 @@ import (
 )
 
 type DecksStoragePort interface {
-	GetDecksForClient(clientID string) ([]domain.Deck, error)
+	GetAvailableDecks(clientID string) ([]domain.Deck, error)
+	UnlockDeck(clientID, deckID string) error
 }
 
 type ShuffleRepoPort interface {

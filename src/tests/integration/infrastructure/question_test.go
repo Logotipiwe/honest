@@ -5,9 +5,9 @@ import (
 	"dc_honest/src/internal/core/domain"
 	. "dc_honest/src/internal/core/service"
 	"dc_honest/src/internal/infrastructure/ms"
+	. "dc_honest/src/pkg"
 	. "dc_honest/src/tests"
 	"github.com/stretchr/testify/assert"
-	"reflect"
 	"testing"
 )
 
@@ -52,20 +52,4 @@ func TestQuestionMsRepo_GetRandomQuestion(t *testing.T) {
 			assert.True(t, SameElements(got, expected), "Got wrong questions. Expected:\n%v\nGot:\n%v", givenQuestions, got)
 		}
 	})
-}
-
-func SameElements[T any](elements []T, required []T) bool {
-	for _, req := range required {
-		found := false
-		for _, el := range elements {
-			if reflect.DeepEqual(req, el) {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-	return true
 }

@@ -12,7 +12,7 @@ type DeckModel struct {
 	Labels      string
 	Image       string
 	IsHidden    bool
-	PromoCode   string
+	PromoCode   *string
 }
 
 func (m DeckModel) ToDeck() domain.Deck {
