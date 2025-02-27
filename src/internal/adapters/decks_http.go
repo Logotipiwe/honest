@@ -43,7 +43,7 @@ func (d *DecksAdapterHttp) Ping(c *gin.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param		 client_id query string true "client id"
-// @Success      200  {object}  DecksAnswer
+// @Success      200  {object}  []DeckOutput
 // @Router       /api/v1/decks [get]
 func (d *DecksAdapterHttp) Decks(c *gin.Context) error {
 	clientID := c.Query("clientId")

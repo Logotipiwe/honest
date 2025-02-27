@@ -15,6 +15,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/decks": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all public decks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "client id",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/adapters.DeckOutput"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/decks/{deckId}/shuffle": {
             "post": {
                 "produces": [
@@ -86,14 +117,14 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "client id",
-                        "name": "client_id",
+                        "name": "clientId",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "level id",
-                        "name": "level_id",
+                        "name": "levelId",
                         "in": "query",
                         "required": true
                     }
@@ -136,38 +167,10 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/v1/decks": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get all public decks",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "client id",
-                        "name": "client_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/adapters.DecksAnswer"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "adapters.DeckDto": {
+        "adapters.DeckOutput": {
             "type": "object",
             "properties": {
                 "description": {
@@ -187,20 +190,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "adapters.DecksAnswer": {
-            "type": "object",
-            "properties": {
-                "decks": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/adapters.DeckDto"
-                    }
-                },
-                "ok": {
-                    "type": "boolean"
                 }
             }
         },
